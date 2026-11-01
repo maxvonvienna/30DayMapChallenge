@@ -1,0 +1,10 @@
+[project]
+name = "30daymapchallenge"
+version = "0.0.2026"
+requires-python = ">=3.14"
+dependencies = [
+    "geopandas>=1.2.0",
+    "ipykernel>=7.4.0",
+    "matplotlib>=3.11.2",
+    "pyarrow>=26.0.0",
+]
