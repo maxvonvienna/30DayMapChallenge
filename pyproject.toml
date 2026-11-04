@@ -8,5 +8,8 @@ dependencies = [
     "ipykernel>=7.4.0",
     "matplotlib>=3.11.2",
     "pyarrow>=26.0.0",
+    "rasterio>=1.5.2",
+    "scikit-learn>=1.9.1",
+    "tqdm>=4.70.1",
     "requests>=2.34.2",
 ]
