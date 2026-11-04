@@ -28,7 +28,7 @@ The Stadtpark as a mosaic of polygons: water, green space, traffic areas and bui
 
 #### Day 4: My Data, *Where do plastic surgeons cluster in Vienna?*
 
-The 130 physicians specializing in plastic surgery in Vienna, clustered with DBSCAN (500 m neighbourhood, at least 5 points per core point). This finds four clusters holding 45 physicians, concentrated in and around the central districts. The other 85 are not assigned to any cluster and appear as grey dots. Data is read from `2026/data/plastic_surgery.geojson`.
+The 130 physicians specializing in plastic surgery in Vienna, clustered with DBSCAN (500 m neighbourhood, at least 5 points per core point). This finds four clusters holding 45 physicians, concentrated in and around the central districts. The other 85 are not assigned to any cluster and appear as grey dots. Physician data comes from the ÖGK and is stored in `2026/data/plastic_surgery.geojson`.
 
 #### Day 5: Senses: Sight, *Can you see Vienna's St. Stephen's Cathedral from where you stand?*
 
@@ -88,3 +88,4 @@ uv run python 05_sight.py
 
 - **City of Vienna, Open Government Data**: [data.wien.gv.at](https://data.wien.gv.at/), licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.de)
 - **BEV (Bundesamt für Eich- und Vermessungswesen), airborne laser scanning**: DSM and DTM from [data.bev.gv.at](https://data.bev.gv.at/)
+- **ÖGK (Österreichische Gesundheitskasse)**: physician data for Day 4
