@@ -2,3 +2,4 @@
 venv/
 .idea/
 */maps/
+*/data/*.tif
