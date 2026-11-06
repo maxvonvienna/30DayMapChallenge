@@ -1,6 +1,6 @@
 # 30 Day Map Challenge
 
-My contributions to the [#30DayMapChallenge](https://30daymapchallenge.com/), a daily mapping challenge held every November. Each day has a theme, and each map is built in a Jupyter notebook with Python.
+My contributions to the [#30DayMapChallenge](https://30daymapchallenge.com/), a daily mapping challenge held every November. Each day has a theme. Most maps are built in a Jupyter notebook with Python, and some are made in QGIS.
 
 ## Maps
 
@@ -13,6 +13,7 @@ My contributions to the [#30DayMapChallenge](https://30daymapchallenge.com/), a 
 | 3 | Polygons | [`03_polygons.ipynb`](2026/03_polygons.ipynb) | Vienna's Stadtpark — a city landscape built from polygons! |
 | 4 | My Data | [`04_cluster.ipynb`](2026/04_cluster.ipynb) | Where do plastic surgeons cluster in Vienna? |
 | 5 | Senses: Sight | [`05_sight.ipynb`](2026/05_sight.ipynb) | Can you see Vienna's St. Stephen's Cathedral from where you stand? |
+| 6 | Vintage | [`06_vintage.ipynb`](2026/06_vintage.ipynb) | Vienna, two centuries ago |
 
 #### Day 1: Points, *A City Park, One Tree at a Time*
 
@@ -36,6 +37,12 @@ A viewshed of Vienna's first district. Observer points on a 5 m grid, at an eye 
 
 This is the only map that needs a separate analysis step. See [Setup](#setup).
 
+#### Day 6: Vintage, *Vienna, two centuries ago*
+
+Vienna in the early 19th century, before the Ringstraße, when it was still a fortified city ringed by open land, gardens, fields and the suburbs that later became part of the city. The map is styled after historical cartography, with fine linework, muted colours and subtle textures. It is based on the Franziscan Cadastre (Franziszeischer Kataster), loaded from the City of Vienna's WFS service (`ogdwien:FRANZKATOGD`).
+
+This map was made in QGIS, not Python. The project is `2026/06_vintage.qgz`, and the notebook holds only the description.
+
 ## Project Structure
 
 ```
@@ -48,6 +55,8 @@ This is the only map that needs a separate analysis step. See [Setup](#setup).
 │   ├── 05_sight.ipynb
 │   ├── 05_download.py    # downloads the elevation rasters for Day 5
 │   ├── 05_sight.py       # viewshed analysis for Day 5
+│   ├── 06_vintage.ipynb  # description only
+│   ├── 06_vintage.qgz    # QGIS project for Day 6
 │   ├── data/             # input data and analysis results
 │   └── maps/             # rendered PNGs (git-ignored)
 ├── pyproject.toml
@@ -73,6 +82,8 @@ uv run python 05_sight.py
 ```
 
 `05_download.py` clips the DSM and DTM to the first district and saves them as `data/dsm.tif` and `data/dtm.tif`, fetching only the part of each 50 km tile it needs. It skips rasters that already exist unless you pass `--force`. `05_sight.py` then writes `data/stephansdom_visibility.gpkg`, which `05_sight.ipynb` plots.
+
+Day 6 is a QGIS project. Open `2026/06_vintage.qgz` in [QGIS](https://qgis.org/); it streams its data from the WFS service, so you need an internet connection.
 
 ### Dependencies
 
