@@ -2,6 +2,8 @@
 
 My contributions to the [#30DayMapChallenge](https://30daymapchallenge.com/), a daily mapping challenge held every November. Each day has a theme. Most maps are built in a Jupyter notebook with Python, and some are made in QGIS.
 
+All finished maps are on my website: [aim.wien/blog/30-day-map-challenge-2026](https://aim.wien/blog/30-day-map-challenge-2026/).
+
 ## Maps
 
 ### 2026
