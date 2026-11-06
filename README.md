@@ -16,6 +16,7 @@ All finished maps are on my website: [aim.wien/blog/30-day-map-challenge-2026](h
 | 4 | My Data | [`04_cluster.ipynb`](2026/04_cluster.ipynb) | Where do plastic surgeons cluster in Vienna? |
 | 5 | Senses: Sight | [`05_sight.ipynb`](2026/05_sight.ipynb) | Can you see Vienna's St. Stephen's Cathedral from where you stand? |
 | 6 | Vintage | [`06_vintage.ipynb`](2026/06_vintage.ipynb) | Vienna, two centuries ago |
+| 7 | 10 Minutes | [`07_10minute.ipynb`](2026/07_10minute.ipynb) | Austria, connected by lines |
 
 #### Day 1: Points, *A City Park, One Tree at a Time*
 
@@ -45,6 +46,18 @@ Vienna in the early 19th century, before the Ringstraße, when it was still a fo
 
 This map was made in QGIS, not Python. The project is `2026/06_vintage.qgz`, and the notebook holds only the description.
 
+#### Day 7: 10 Minutes, *Austria, connected by lines*
+
+A map made in ten minutes: Austria's electricity transmission network and nothing else. With no borders, cities or labels, the power lines become an almost abstract drawing of the country. The simplified network (1,891 line segments) is stored in `2026/07_10minute.gpkg`. Its source attributes credit BEV and the grid operators, including APG and several regional network companies. The notebook shows the rendered map.
+
+## Hashtags
+
+All hashtags used across the maps, without the per-day `#DayN` tags:
+
+```
+#30DayMapChallenge #Points #Lines #Polygons #MyData #Senses #Sight #Vintage #10Minutes #Vienna #Austria #Stadtpark #Stephansdom #GIS #GeoData #Geospatial #OpenData #Cartography #HistoricalCartography #MinimalistCartography #SpatialAnalysis #Viewshed #DBSCAN #Python #GeoPandas #UrbanGreen #UrbanHistory #CyclingInfrastructure #HealthcareGeography #ElectricityGrid
+```
+
 ## Project Structure
 
 ```
@@ -59,6 +72,8 @@ This map was made in QGIS, not Python. The project is `2026/06_vintage.qgz`, and
 │   ├── 05_sight.py       # viewshed analysis for Day 5
 │   ├── 06_vintage.ipynb  # description only
 │   ├── 06_vintage.qgz    # QGIS project for Day 6
+│   ├── 07_10minute.ipynb
+│   ├── 07_10minute.gpkg  # power line data for Day 7
 │   ├── data/             # input data and analysis results
 │   └── maps/             # rendered PNGs (git-ignored)
 ├── pyproject.toml
@@ -102,3 +117,4 @@ Day 6 is a QGIS project. Open `2026/06_vintage.qgz` in [QGIS](https://qgis.org/)
 - **City of Vienna, Open Government Data**: [data.wien.gv.at](https://data.wien.gv.at/), licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.de)
 - **BEV (Bundesamt für Eich- und Vermessungswesen), airborne laser scanning**: DSM and DTM from [data.bev.gv.at](https://data.bev.gv.at/)
 - **ÖGK (Österreichische Gesundheitskasse)**: physician data for Day 4
+- **BEV and Austrian grid operators (APG and regional network companies)**: power line data for Day 7
