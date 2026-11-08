@@ -1,0 +1,21 @@
+{
+  "initial": {
+    "score": 0.3135777486514448,
+    "terrain": 0.24948382515245887,
+    "compactness_km": 6.140880217521952,
+    "network_km": 1019.2206710435298,
+    "coverage_km": 5.983253508167573,
+    "occupied_area_km2": 766.6666666666666
+  },
+  "final": {
+    "score": 0.29963889966523016,
+    "terrain": 0.24954316319460415,
+    "compactness_km": 5.060192122586266,
+    "network_km": 1012.0758670280863,
+    "coverage_km": 4.942745633521525,
+    "occupied_area_km2": 766.6666666666666
+  },
+  "cities": 9,
+  "population": 9200000,
+  "note": "Nine equal-population regions. Coverage is mean distance of sampled suitable candidate cells to nearest city center. MST uses straight-line links; terrain-aware routing is a future extension. Occupied area is theoretical at maximum density, not exact polygon footprint."
+}

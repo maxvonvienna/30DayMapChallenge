@@ -17,6 +17,7 @@ All finished maps are on my website: [aim.wien/blog/30-day-map-challenge-2026](h
 | 5 | Senses: Sight | [`05_sight.ipynb`](2026/05_sight.ipynb) | Can you see Vienna's St. Stephen's Cathedral from where you stand? |
 | 6 | Vintage | [`06_vintage.ipynb`](2026/06_vintage.ipynb) | Vienna, two centuries ago |
 | 7 | 10 Minutes | [`07_10minute.ipynb`](2026/07_10minute.ipynb) | Austria, connected by lines |
+| 8 | Utopia | [`08_utopia_dem.ipynb`](2026/08_utopia_dem.ipynb) | Austria from Scratch — what if we could redesign an entire country? |
 
 #### Day 1: Points, *A City Park, One Tree at a Time*
 
@@ -50,12 +51,18 @@ This map was made in QGIS, not Python. The project is `2026/06_vintage.qgz`, and
 
 A map made in ten minutes: Austria's electricity transmission network and nothing else. With no borders, cities or labels, the power lines become an almost abstract drawing of the country. The simplified network (1,891 line segments) is stored in `2026/07_10minute.gpkg`. Its source attributes credit BEV and the grid operators, including APG and several regional network companies. The notebook shows the rendered map.
 
+#### Day 8: Utopia, *Austria from Scratch — what if we could redesign an entire country?*
+
+A thought experiment that ignores existing cities, roads and borders and moves Austria's population of about 9.2 million into nine newly planned urban regions of equal size. Austria is split into the 1 km cells of Statistik Austria's regional statistical grid. Each cell gets the mean slope and elevation of a 10 m Digital Terrain Model derived from airborne laser scanning. Only cells with a slope of at most 20° and an elevation of at most 1,500 m qualify, and density is capped at 12,000 inhabitants per km². The cities grow outward from seed cells, preferring flat, low terrain. An iterative optimization (200 iterations for the final map) then relocates the seeds one at a time and keeps a move only if it improves a combined score of terrain, compactness, network length and coverage of the suitable land. The cities are linked by a minimum spanning tree of straight lines between their centres. This is a deliberate thought experiment, not a planning proposal.
+
+The notebook prepares the candidate cells and contains a first single-pass version. The final map comes from `08_austria_utopia_optimize.py`. See [Setup](#setup).
+
 ## Hashtags
 
 All hashtags used across the maps, without the per-day `#DayN` tags:
 
 ```
-#30DayMapChallenge #Points #Lines #Polygons #MyData #Senses #Sight #Vintage #10Minutes #Vienna #Austria #Stadtpark #Stephansdom #GIS #GeoData #Geospatial #OpenData #Cartography #HistoricalCartography #MinimalistCartography #SpatialAnalysis #Viewshed #DBSCAN #Python #GeoPandas #UrbanGreen #UrbanHistory #CyclingInfrastructure #HealthcareGeography #ElectricityGrid
+#30DayMapChallenge #Points #Lines #Polygons #MyData #Senses #Sight #Vintage #10Minutes #Vienna #Austria #Stadtpark #Stephansdom #GIS #GeoData #Geospatial #OpenData #Cartography #HistoricalCartography #MinimalistCartography #SpatialAnalysis #Viewshed #DBSCAN #Python #GeoPandas #UrbanGreen #UrbanHistory #CyclingInfrastructure #HealthcareGeography #ElectricityGrid #Utopia #SpatialOptimization #UrbanPlanning #RegionalDevelopment
 ```
 
 ## Project Structure
@@ -74,6 +81,8 @@ All hashtags used across the maps, without the per-day `#DayN` tags:
 │   ├── 06_vintage.qgz    # QGIS project for Day 6
 │   ├── 07_10minute.ipynb
 │   ├── 07_10minute.gpkg  # power line data for Day 7
+│   ├── 08_utopia_dem.ipynb
+│   ├── 08_austria_utopia_optimize.py  # 9-city optimization for Day 8
 │   ├── data/             # input data and analysis results
 │   └── maps/             # rendered PNGs (git-ignored)
 ├── pyproject.toml
@@ -102,6 +111,15 @@ uv run python 05_sight.py
 
 Day 6 is a QGIS project. Open `2026/06_vintage.qgz` in [QGIS](https://qgis.org/); it streams its data from the WFS service, so you need an internet connection.
 
+Day 8's final map comes from the optimization script. Run it from `2026/`:
+
+```bash
+cd 2026
+uv run python 08_austria_utopia_optimize.py data/austria_candidates.gpkg \n    --layer settlement_candidates --iterations 200 --output data/utopia_9_cities
+```
+
+The input is a GeoPackage of 1 km candidate cells with `slope` and `elevation` columns. The script writes `utopia.gpkg` (settlement cells, city regions, city centres and the network), `utopia_map.png`, `optimization.png` and `summary.json` to the output folder, and it saves the map as `maps/map08.png`. Both the input `data/austria_candidates.gpkg` and the result in `data/utopia_9_cities/` are included in the repository.
+
 ### Dependencies
 
 - [geopandas](https://geopandas.org/): reading and processing geodata
@@ -109,6 +127,7 @@ Day 6 is a QGIS project. Open `2026/06_vintage.qgz` in [QGIS](https://qgis.org/)
 - [pyarrow](https://arrow.apache.org/docs/python/): Parquet I/O
 - [rasterio](https://rasterio.readthedocs.io/): reading the elevation rasters
 - [scikit-learn](https://scikit-learn.org/): DBSCAN clustering
+- [scipy](https://scipy.org/): spatial index and minimum spanning tree for Day 8
 - [tqdm](https://tqdm.github.io/): progress bar for the viewshed analysis
 - [ipykernel](https://ipython.readthedocs.io/): Jupyter kernel
 
@@ -118,3 +137,5 @@ Day 6 is a QGIS project. Open `2026/06_vintage.qgz` in [QGIS](https://qgis.org/)
 - **BEV (Bundesamt für Eich- und Vermessungswesen), airborne laser scanning**: DSM and DTM from [data.bev.gv.at](https://data.bev.gv.at/)
 - **ÖGK (Österreichische Gesundheitskasse)**: physician data for Day 4
 - **BEV and Austrian grid operators (APG and regional network companies)**: power line data for Day 7
+- **Land Kärnten, Digital Terrain Model (DGM) of Austria**: 10 m × 10 m terrain heights from airborne laser scanning, GeoTIFF in EPSG:31287, used for slope and elevation in Day 8
+- **Statistik Austria**: 1 km regional statistical grid (Regionalstatistisches Raster) and the national border for Day 8

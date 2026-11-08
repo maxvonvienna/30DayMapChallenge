@@ -19,6 +19,7 @@ dependencies = [
     { name = "rasterio" },
     { name = "requests" },
     { name = "scikit-learn" },
+    { name = "scipy" },
     { name = "tqdm" },
 ]
 
@@ -32,6 +33,7 @@ requires-dist = [
     { name = "rasterio", specifier = ">=1.5.2" },
     { name = "requests", specifier = ">=2.34.2" },
     { name = "scikit-learn", specifier = ">=1.9.1" },
+    { name = "scipy", specifier = ">=1.18.1" },
     { name = "tqdm", specifier = ">=4.70.1" },
 ]
 
