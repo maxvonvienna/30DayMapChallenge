@@ -18,6 +18,7 @@ All finished maps are on my website: [aim.wien/blog/30-day-map-challenge-2026](h
 | 6 | Vintage | [`06_vintage.ipynb`](2026/06_vintage.ipynb) | Vienna, two centuries ago |
 | 7 | 10 Minutes | [`07_10minute.ipynb`](2026/07_10minute.ipynb) | Austria, connected by lines |
 | 8 | Utopia | [`08_utopia_dem.ipynb`](2026/08_utopia_dem.ipynb) | Austria from Scratch — what if we could redesign an entire country? |
+| 9 | Urban–Rural | [`09_urban-rural.ipynb`](2026/09_urban-rural.ipynb) | The Invisible City — Mapping Austria's Settlement Structure |
 
 #### Day 1: Points, *A City Park, One Tree at a Time*
 
@@ -57,12 +58,18 @@ A thought experiment that ignores existing cities, roads and borders and moves A
 
 The notebook prepares the candidate cells and contains a first single-pass version. The final map comes from `08_austria_utopia_optimize.py`. See [Setup](#setup).
 
+#### Day 9: Urban–Rural, *The Invisible City — Mapping Austria's Settlement Structure*
+
+Where does the city end and the countryside begin? This map leaves out administrative boundaries and population figures and looks only at buildings. For each of the 1.35 million cells of Statistik Austria's 250 m grid, a continuous urbanity index combines building density (40 %), built-up share of the cell (35 %) and the median distance to the nearest neighbouring building (25 %). Each measure is scaled between its 5th and 95th percentile first. The result shows cities as dark cores and valleys and transport corridors as fine branching lines, with a gradual transition from urban to rural rather than a sharp border.
+
+The building statistics per grid cell are computed in PostGIS with `2026/09.sql`. See [Setup](#setup).
+
 ## Hashtags
 
 All hashtags used across the maps, without the per-day `#DayN` tags:
 
 ```
-#30DayMapChallenge #Points #Lines #Polygons #MyData #Senses #Sight #Vintage #10Minutes #Vienna #Austria #Stadtpark #Stephansdom #GIS #GeoData #Geospatial #OpenData #Cartography #HistoricalCartography #MinimalistCartography #SpatialAnalysis #Viewshed #DBSCAN #Python #GeoPandas #UrbanGreen #UrbanHistory #CyclingInfrastructure #HealthcareGeography #ElectricityGrid #Utopia #SpatialOptimization #UrbanPlanning #RegionalDevelopment
+#30DayMapChallenge #Points #Lines #Polygons #MyData #Senses #Sight #Vintage #10Minutes #Vienna #Austria #Stadtpark #Stephansdom #GIS #GeoData #Geospatial #OpenData #Cartography #HistoricalCartography #MinimalistCartography #SpatialAnalysis #Viewshed #DBSCAN #Python #GeoPandas #UrbanGreen #UrbanHistory #CyclingInfrastructure #HealthcareGeography #ElectricityGrid #Utopia #SpatialOptimization #UrbanPlanning #RegionalDevelopment #UrbanRural #SettlementPatterns #UrbanMorphology
 ```
 
 ## Project Structure
@@ -83,6 +90,9 @@ All hashtags used across the maps, without the per-day `#DayN` tags:
 │   ├── 07_10minute.gpkg  # power line data for Day 7
 │   ├── 08_utopia_dem.ipynb
 │   ├── 08_austria_utopia_optimize.py  # 9-city optimization for Day 8
+│   ├── 09_urban-rural.ipynb
+│   ├── 09.sql            # PostGIS building statistics for Day 9
+│   ├── 09.py             # loads the Day 9 grid from PostGIS
 │   ├── data/             # input data and analysis results
 │   └── maps/             # rendered PNGs (git-ignored)
 ├── pyproject.toml
@@ -120,12 +130,14 @@ uv run python 08_austria_utopia_optimize.py data/austria_candidates.gpkg \n    -
 
 The input is a GeoPackage of 1 km candidate cells with `slope` and `elevation` columns. The script writes `utopia.gpkg` (settlement cells, city regions, city centres and the network), `utopia_map.png`, `optimization.png` and `summary.json` to the output folder, and it saves the map as `maps/map08.png`. Both the input `data/austria_candidates.gpkg` and the result in `data/utopia_9_cities/` are included in the repository.
 
+Day 9 needs a PostgreSQL/PostGIS database with the building footprints and the 250 m grid. `09.sql` builds materialized views with the number of buildings, built-up share and nearest-neighbour distances per grid cell. The joined result is exported to `data/buildings_grid.gpkg`, which the notebook reads. This file is about 320 MB and is not included in the repository. The notebook draws the 1.35 million cells as a single raster image instead of individual polygons, which takes seconds instead of more than a minute.
+
 ### Dependencies
 
 - [geopandas](https://geopandas.org/): reading and processing geodata
 - [matplotlib](https://matplotlib.org/): rendering the maps
 - [pyarrow](https://arrow.apache.org/docs/python/): Parquet I/O
-- [rasterio](https://rasterio.readthedocs.io/): reading the elevation rasters
+- [rasterio](https://rasterio.readthedocs.io/): reading the elevation rasters and rendering the Day 9 grid
 - [scikit-learn](https://scikit-learn.org/): DBSCAN clustering
 - [scipy](https://scipy.org/): spatial index and minimum spanning tree for Day 8
 - [tqdm](https://tqdm.github.io/): progress bar for the viewshed analysis
@@ -138,4 +150,4 @@ The input is a GeoPackage of 1 km candidate cells with `slope` and `elevation` c
 - **ÖGK (Österreichische Gesundheitskasse)**: physician data for Day 4
 - **BEV and Austrian grid operators (APG and regional network companies)**: power line data for Day 7
 - **Land Kärnten, Digital Terrain Model (DGM) of Austria**: 10 m × 10 m terrain heights from airborne laser scanning, GeoTIFF in EPSG:31287, used for slope and elevation in Day 8
-- **Statistik Austria**: 1 km regional statistical grid (Regionalstatistisches Raster) and the national border for Day 8
+- **Statistik Austria**: 1 km regional statistical grid (Regionalstatistisches Raster) and the national border for Day 8, and the 250 m grid for Day 9
