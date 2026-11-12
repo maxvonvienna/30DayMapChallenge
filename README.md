@@ -19,6 +19,9 @@ All finished maps are on my website: [aim.wien/blog/30-day-map-challenge-2026](h
 | 7 | 10 Minutes | [`07_10minute.ipynb`](2026/07_10minute.ipynb) | Austria, connected by lines |
 | 8 | Utopia | [`08_utopia_dem.ipynb`](2026/08_utopia_dem.ipynb) | Austria from Scratch — what if we could redesign an entire country? |
 | 9 | Urban–Rural | [`09_urban-rural.ipynb`](2026/09_urban-rural.ipynb) | The Invisible City — Mapping Austria's Settlement Structure |
+| 10 | Prompting Only | [`10_prompted.py`](2026/10_prompted.py) | 100 Years of Urban Growth (1925–2025) |
+| 11 | Senses: Sound | [`11_sound.ipynb`](2026/11_sound.ipynb) | Can you hear the city? Mapping railway noise in Vienna |
+| 12 | Power | [`12_power.ipynb`](2026/12_power.ipynb) | Solar power in Vienna's districts |
 
 #### Day 1: Points, *A City Park, One Tree at a Time*
 
@@ -64,12 +67,26 @@ Where does the city end and the countryside begin? This map leaves out administr
 
 The building statistics per grid cell are computed in PostGIS with `2026/09.sql`. See [Setup](#setup).
 
+#### Day 10: Prompting Only, *100 Years of Urban Growth (1925–2025)*
+
+What happens when AI takes over the entire mapmaking process? This map follows a fictional city through 100 years of growth, from a compact settlement to a sprawling urban landscape. A synthetic cellular growth model expands the city from its existing settlements along transport connections, held back by a river, hills and protected areas. Every step, from generating the data and running the simulation to the cartographic styling and export, was done by ChatGPT using Python, NumPy, SciPy and Matplotlib. There is no real-world geodata and no manual editing, just prompting.
+
+The map comes from `2026/10_prompted.py`, which uses a fixed random seed and writes `maps/map10.png`. The description is in `2026/_prompted.ipynb`.
+
+#### Day 11: Senses: Sound, *Can you hear the city? Mapping railway noise in Vienna*
+
+The invisible geography of railway noise around Wien Hauptbahnhof, at the centre of the map. Coloured zones show railway noise exposure from Austria's 2022 strategic noise mapping (day-evening-night indicator, Lden), and black building footprints show the dense city around the tracks. The noise follows the railway corridors but spreads well beyond the tracks into the surrounding neighbourhoods. The noise zones are loaded as an image from the noise mapping WMS (`2022_SCHIENE_24H_ZONEN_OE`), and the buildings from the City of Vienna's WFS service (`ogdwien:FMZKGEBOGD`).
+
+#### Day 12: Power, *Solar power in Vienna's districts*
+
+How much solar power is installed in each of Vienna's 23 districts, relative to their size? Each solar installation from the City of Vienna's solar dataset (`ogdwien:SOLARANLAGLSTGOGD`) is assigned to exactly one district using a point inside its outline. The installed capacity is summed per district and divided by the district's area in hectares. District boundaries come from `ogdwien:BEZIRKSGRENZEOGD`.
+
 ## Hashtags
 
 All hashtags used across the maps, without the per-day `#DayN` tags:
 
 ```
-#30DayMapChallenge #Points #Lines #Polygons #MyData #Senses #Sight #Vintage #10Minutes #Vienna #Austria #Stadtpark #Stephansdom #GIS #GeoData #Geospatial #OpenData #Cartography #HistoricalCartography #MinimalistCartography #SpatialAnalysis #Viewshed #DBSCAN #Python #GeoPandas #UrbanGreen #UrbanHistory #CyclingInfrastructure #HealthcareGeography #ElectricityGrid #Utopia #SpatialOptimization #UrbanPlanning #RegionalDevelopment #UrbanRural #SettlementPatterns #UrbanMorphology
+#30DayMapChallenge #Points #Lines #Polygons #MyData #Senses #Sight #Vintage #10Minutes #Vienna #Austria #Stadtpark #Stephansdom #GIS #GeoData #Geospatial #OpenData #Cartography #HistoricalCartography #MinimalistCartography #SpatialAnalysis #Viewshed #DBSCAN #Python #GeoPandas #UrbanGreen #UrbanHistory #CyclingInfrastructure #HealthcareGeography #ElectricityGrid #Utopia #SpatialOptimization #UrbanPlanning #RegionalDevelopment #UrbanRural #SettlementPatterns #UrbanMorphology #PromptingOnly #UrbanGrowth #Sound #NoisePollution #Power #SolarEnergy
 ```
 
 ## Project Structure
@@ -92,7 +109,11 @@ All hashtags used across the maps, without the per-day `#DayN` tags:
 │   ├── 08_austria_utopia_optimize.py  # 9-city optimization for Day 8
 │   ├── 09_urban-rural.ipynb
 │   ├── 09.sql            # PostGIS building statistics for Day 9
-│   ├── 09.py             # loads the Day 9 grid from PostGIS
+│   ├── 09_download.py    # downloads the 250 m grid and building footprints for Day 9
+│   ├── 10_prompted.py    # synthetic urban-growth simulation and map for Day 10
+│   ├── _prompted.ipynb   # description for Day 10
+│   ├── 11_sound.ipynb
+│   ├── 12_power.ipynb
 │   ├── data/             # input data and analysis results
 │   └── maps/             # rendered PNGs (git-ignored)
 ├── pyproject.toml
@@ -130,7 +151,7 @@ uv run python 08_austria_utopia_optimize.py data/austria_candidates.gpkg \n    -
 
 The input is a GeoPackage of 1 km candidate cells with `slope` and `elevation` columns. The script writes `utopia.gpkg` (settlement cells, city regions, city centres and the network), `utopia_map.png`, `optimization.png` and `summary.json` to the output folder, and it saves the map as `maps/map08.png`. Both the input `data/austria_candidates.gpkg` and the result in `data/utopia_9_cities/` are included in the repository.
 
-Day 9 needs a PostgreSQL/PostGIS database with the building footprints and the 250 m grid. `09.sql` builds materialized views with the number of buildings, built-up share and nearest-neighbour distances per grid cell. The joined result is exported to `data/buildings_grid.gpkg`, which the notebook reads. This file is about 320 MB and is not included in the repository. The notebook draws the 1.35 million cells as a single raster image instead of individual polygons, which takes seconds instead of more than a minute.
+Day 9 needs a PostgreSQL/PostGIS database with the building footprints and the 250 m grid. `09_download.py` downloads both: the grid from Statistik Austria's WFS service to `data/raster_250m.gpkg`, and the building footprints from BEV's Digital Landscape Model (DLM) to `data/buildings.gpkg`. `09.sql` builds materialized views with the number of buildings, built-up share and nearest-neighbour distances per grid cell. The joined result is exported to `data/buildings_grid.gpkg`, which the notebook reads. This file is about 320 MB and is not included in the repository. The notebook draws the 1.35 million cells as a single raster image instead of individual polygons, which takes seconds instead of more than a minute.
 
 ### Dependencies
 
@@ -139,7 +160,8 @@ Day 9 needs a PostgreSQL/PostGIS database with the building footprints and the 2
 - [pyarrow](https://arrow.apache.org/docs/python/): Parquet I/O
 - [rasterio](https://rasterio.readthedocs.io/): reading the elevation rasters and rendering the Day 9 grid
 - [scikit-learn](https://scikit-learn.org/): DBSCAN clustering
-- [scipy](https://scipy.org/): spatial index and minimum spanning tree for Day 8
+- [scipy](https://scipy.org/): spatial index and minimum spanning tree for Day 8, growth simulation for Day 10
+- [requests](https://requests.readthedocs.io/) and [geojson](https://github.com/jazzband/geojson): loading data from the WFS and WMS services
 - [tqdm](https://tqdm.github.io/): progress bar for the viewshed analysis
 - [ipykernel](https://ipython.readthedocs.io/): Jupyter kernel
 
@@ -150,4 +172,6 @@ Day 9 needs a PostgreSQL/PostGIS database with the building footprints and the 2
 - **ÖGK (Österreichische Gesundheitskasse)**: physician data for Day 4
 - **BEV and Austrian grid operators (APG and regional network companies)**: power line data for Day 7
 - **Land Kärnten, Digital Terrain Model (DGM) of Austria**: 10 m × 10 m terrain heights from airborne laser scanning, GeoTIFF in EPSG:31287, used for slope and elevation in Day 8
+- **BEV, Digital Landscape Model (DLM)**: building footprints for Day 9
+- **Austrian strategic noise mapping 2022**: railway noise zones (Lden) for Day 11, via the WMS at `inspire.lfrz.gv.at`
 - **Statistik Austria**: 1 km regional statistical grid (Regionalstatistisches Raster) and the national border for Day 8, and the 250 m grid for Day 9
