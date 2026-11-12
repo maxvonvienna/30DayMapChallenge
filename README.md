@@ -21,7 +21,8 @@ All finished maps are on my website: [aim.wien/blog/30-day-map-challenge-2026](h
 | 9 | Urban–Rural | [`09_urban-rural.ipynb`](2026/09_urban-rural.ipynb) | The Invisible City — Mapping Austria's Settlement Structure |
 | 10 | Prompting Only | [`10_prompted.py`](2026/10_prompted.py) | 100 Years of Urban Growth (1925–2025) |
 | 11 | Senses: Sound | [`11_sound.ipynb`](2026/11_sound.ipynb) | Can you hear the city? Mapping railway noise in Vienna |
-| 12 | Power | [`12_power.ipynb`](2026/12_power.ipynb) | Solar power in Vienna's districts |
+| 12 | Power | [`12_power.ipynb`](2026/12_power.ipynb) | Solar Power Above Vienna |
+| 13 | Interactions | [`13_interactions.ipynb`](2026/13_interactions.ipynb) | Commuting to Vienna — A City Beyond Its Borders |
 
 #### Day 1: Points, *A City Park, One Tree at a Time*
 
@@ -77,16 +78,22 @@ The map comes from `2026/10_prompted.py`, which uses a fixed random seed and wri
 
 The invisible geography of railway noise around Wien Hauptbahnhof, at the centre of the map. Coloured zones show railway noise exposure from Austria's 2022 strategic noise mapping (day-evening-night indicator, Lden), and black building footprints show the dense city around the tracks. The noise follows the railway corridors but spreads well beyond the tracks into the surrounding neighbourhoods. The noise zones are loaded as an image from the noise mapping WMS (`2022_SCHIENE_24H_ZONEN_OE`), and the buildings from the City of Vienna's WFS service (`ogdwien:FMZKGEBOGD`).
 
-#### Day 12: Power, *Solar power in Vienna's districts*
+#### Day 12: Power, *Solar Power Above Vienna*
 
-How much solar power is installed in each of Vienna's 23 districts, relative to their size? Each solar installation from the City of Vienna's solar dataset (`ogdwien:SOLARANLAGLSTGOGD`) is assigned to exactly one district using a point inside its outline. The installed capacity is summed per district and divided by the district's area in hectares. District boundaries come from `ogdwien:BEZIRKSGRENZEOGD`.
+How much energy potential is hidden on Vienna's rooftops? Each roof surface is coloured by its estimated photovoltaic capacity in kilowatt-peak (kWp). Most roofs appear in subtle purple, while large buildings with substantial potential stand out in green and yellow. The estimates come from the City of Vienna's photovoltaic potential dataset (`ogdwien:SOLARANLAGLSTGOGD`), which combines a digital surface model, solar radiation modelling, aerial imagery and roof inclination. The values are theoretical potential, not installed capacity.
+
+#### Day 13: Interactions, *Commuting to Vienna — A City Beyond Its Borders*
+
+Where does Vienna end, and where does its functional urban region begin? Each line connects a municipality with one of Vienna's 23 districts, weighted by the number of people commuting there. The 4,154 connections cover about 191,600 inbound commuters in 2024, most of them from Lower Austria and Burgenland. Together the overlapping lines show Vienna as a major employment centre whose everyday reach extends far beyond the city limits.
+
+The notebook holds only the description. The commuting lines and municipality centroids are stored in `2026/data/day13.gpkg`.
 
 ## Hashtags
 
 All hashtags used across the maps, without the per-day `#DayN` tags:
 
 ```
-#30DayMapChallenge #Points #Lines #Polygons #MyData #Senses #Sight #Vintage #10Minutes #Vienna #Austria #Stadtpark #Stephansdom #GIS #GeoData #Geospatial #OpenData #Cartography #HistoricalCartography #MinimalistCartography #SpatialAnalysis #Viewshed #DBSCAN #Python #GeoPandas #UrbanGreen #UrbanHistory #CyclingInfrastructure #HealthcareGeography #ElectricityGrid #Utopia #SpatialOptimization #UrbanPlanning #RegionalDevelopment #UrbanRural #SettlementPatterns #UrbanMorphology #PromptingOnly #UrbanGrowth #Sound #NoisePollution #Power #SolarEnergy
+#30DayMapChallenge #Points #Lines #Polygons #MyData #Senses #Sight #Vintage #10Minutes #Vienna #Austria #Stadtpark #Stephansdom #GIS #GeoData #Geospatial #OpenData #Cartography #HistoricalCartography #MinimalistCartography #SpatialAnalysis #Viewshed #DBSCAN #Python #GeoPandas #UrbanGreen #UrbanHistory #CyclingInfrastructure #HealthcareGeography #ElectricityGrid #Utopia #SpatialOptimization #UrbanPlanning #RegionalDevelopment #UrbanRural #SettlementPatterns #UrbanMorphology #PromptingOnly #UrbanGrowth #Sound #NoisePollution #Power #SolarEnergy #Photovoltaics #Interactions #Commuting
 ```
 
 ## Project Structure
@@ -114,6 +121,7 @@ All hashtags used across the maps, without the per-day `#DayN` tags:
 │   ├── _prompted.ipynb   # description for Day 10
 │   ├── 11_sound.ipynb
 │   ├── 12_power.ipynb
+│   ├── 13_interactions.ipynb  # description only
 │   ├── data/             # input data and analysis results
 │   └── maps/             # rendered PNGs (git-ignored)
 ├── pyproject.toml
