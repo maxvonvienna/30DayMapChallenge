@@ -24,6 +24,7 @@ All finished maps are on my website: [aim.wien/blog/30-day-map-challenge-2026](h
 | 12 | Power | [`12_power.ipynb`](2026/12_power.ipynb) | Solar Power Above Vienna |
 | 13 | Interactions | [`13_interactions.ipynb`](2026/13_interactions.ipynb) | Commuting to Vienna — A City Beyond Its Borders |
 | 14 | A map so detailed it becomes the territory | [`14_map_that_ate_vienna_local_pbf.py`](2026/14_map_that_ate_vienna_local_pbf.py) | The Map That Ate Vienna |
+| 15 | Inside Out, Upside Down | [`15_inverted_alps.py`](2026/15_inverted_alps.py) | The Inverted Alps |
 
 #### Day 1: Points, *A City Park, One Tree at a Time*
 
@@ -95,12 +96,18 @@ How much detail can a map contain before it stops being useful? Inspired by Jorg
 
 The map comes from `2026/14_map_that_ate_vienna_local_pbf.py`, which reads a local OpenStreetMap PBF file with PyOsmium. See [Setup](#setup).
 
+#### Day 15: Inside Out, Upside Down, *The Inverted Alps*
+
+The Grossglockner massif twice, side by side: once as it is, and once turned inside out. The inverted elevation is z′ = min + max − z, so the highest summits become the deepest valleys and the valleys become ridges, within the same elevation range and at the same coordinates. Both panels use the same hillshading and 100 m contour lines, so the inverted terrain reads as a real landscape. The elevation model is reprojected to UTM zone 33N (EPSG:32633) at 30 m resolution.
+
+The map comes from `2026/15_inverted_alps.py`. By default it downloads public elevation tiles from AWS and caches them locally. See [Setup](#setup).
+
 ## Hashtags
 
 All hashtags used across the maps, without the per-day `#DayN` tags:
 
 ```
-#30DayMapChallenge #Points #Lines #Polygons #MyData #Senses #Sight #Vintage #10Minutes #Vienna #Austria #Stadtpark #Stephansdom #GIS #GeoData #Geospatial #OpenData #Cartography #HistoricalCartography #MinimalistCartography #SpatialAnalysis #Viewshed #DBSCAN #Python #GeoPandas #UrbanGreen #UrbanHistory #CyclingInfrastructure #HealthcareGeography #ElectricityGrid #Utopia #SpatialOptimization #UrbanPlanning #RegionalDevelopment #UrbanRural #SettlementPatterns #UrbanMorphology #PromptingOnly #UrbanGrowth #Sound #NoisePollution #Power #SolarEnergy #Photovoltaics #Interactions #Commuting #OpenStreetMap #MapGeneralization
+#30DayMapChallenge #Points #Lines #Polygons #MyData #Senses #Sight #Vintage #10Minutes #Vienna #Austria #Stadtpark #Stephansdom #GIS #GeoData #Geospatial #OpenData #Cartography #HistoricalCartography #MinimalistCartography #SpatialAnalysis #Viewshed #DBSCAN #Python #GeoPandas #UrbanGreen #UrbanHistory #CyclingInfrastructure #HealthcareGeography #ElectricityGrid #Utopia #SpatialOptimization #UrbanPlanning #RegionalDevelopment #UrbanRural #SettlementPatterns #UrbanMorphology #PromptingOnly #UrbanGrowth #Sound #NoisePollution #Power #SolarEnergy #Photovoltaics #Interactions #Commuting #OpenStreetMap #MapGeneralization #InsideOut #Alps #Grossglockner #Terrain #Hillshade
 ```
 
 ## Project Structure
@@ -129,6 +136,7 @@ All hashtags used across the maps, without the per-day `#DayN` tags:
 │   ├── 12_power.ipynb
 │   ├── 13_interactions.ipynb  # description only
 │   ├── 14_map_that_ate_vienna_local_pbf.py  # four-panel OSM map for Day 14
+│   ├── 15_inverted_alps.py  # real and inverted terrain for Day 15
 │   ├── data/             # input data and analysis results
 │   └── maps/             # rendered PNGs (git-ignored)
 ├── pyproject.toml
@@ -177,6 +185,15 @@ uv run python 14_map_that_ate_vienna_local_pbf.py --pbf data/vienna_center.osm.p
 
 Without `--out`, the map is saved as `day14_map_that_ate_vienna.png` in the current directory. `--bbox WEST SOUTH EAST NORTH` changes the map extent (WGS84), and `--labels` and `--label-step` control how many labels the fourth panel draws. The script also accepts a full Austria extract such as `austria-latest.osm.pbf`, but reading it takes much longer. Multipolygon relations are not assembled, so closed ways are drawn as outlines.
 
+Day 15 downloads elevation tiles on its first run, so it needs an internet connection then. Run it from `2026/`:
+
+```bash
+cd 2026
+uv run python 15_inverted_alps.py
+```
+
+The script saves the map as `maps/map15.png` and caches the downloaded tiles in `terrain_tile_cache/`, both relative to the current directory. `--dem path/to/dem.tif` uses a local elevation model in any coordinate system instead of the tiles, and `--zoom` (default 11), `--cell` (default 30 m) and `--dpi` (default 240) control the resolution.
+
 ### Dependencies
 
 - [geopandas](https://geopandas.org/): reading and processing geodata
@@ -186,6 +203,7 @@ Without `--out`, the map is saved as `day14_map_that_ate_vienna.png` in the curr
 - [scikit-learn](https://scikit-learn.org/): DBSCAN clustering
 - [scipy](https://scipy.org/): spatial index and minimum spanning tree for Day 8, growth simulation for Day 10
 - [osmium](https://osmcode.org/pyosmium/): reading OpenStreetMap PBF files for Day 14
+- [mercantile](https://github.com/mapbox/mercantile): finding the elevation tiles for Day 15
 - [requests](https://requests.readthedocs.io/) and [geojson](https://github.com/jazzband/geojson): loading data from the WFS and WMS services
 - [tqdm](https://tqdm.github.io/): progress bar for the viewshed analysis
 - [ipykernel](https://ipython.readthedocs.io/): Jupyter kernel
@@ -199,5 +217,6 @@ Without `--out`, the map is saved as `day14_map_that_ate_vienna.png` in the curr
 - **Land Kärnten, Digital Terrain Model (DGM) of Austria**: 10 m × 10 m terrain heights from airborne laser scanning, GeoTIFF in EPSG:31287, used for slope and elevation in Day 8
 - **BEV, Digital Landscape Model (DLM)**: building footprints for Day 9
 - **OpenStreetMap contributors**: map data for Day 14, licensed under the [ODbL](https://opendatacommons.org/licenses/odbl/)
+- **AWS Terrain Tiles** ([Registry of Open Data on AWS](https://registry.opendata.aws/terrain-tiles/)): elevation data for Day 15
 - **Austrian strategic noise mapping 2022**: railway noise zones (Lden) for Day 11, via the WMS at `inspire.lfrz.gv.at`
 - **Statistik Austria**: 1 km regional statistical grid (Regionalstatistisches Raster) and the national border for Day 8, and the 250 m grid for Day 9

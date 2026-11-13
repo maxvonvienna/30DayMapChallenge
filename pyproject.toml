@@ -18,4 +18,6 @@ dependencies = [
     "osmnx>=2.1.1",
     "shapely>=2.2.0",
     "osmium>=4.3.2",
+    "numpy>=2.5.4",
+    "mercantile>=1.2.1",
 ]
