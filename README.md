@@ -25,6 +25,7 @@ All finished maps are on my website: [aim.wien/blog/30-day-map-challenge-2026](h
 | 13 | Interactions | [`13_interactions.ipynb`](2026/13_interactions.ipynb) | Commuting to Vienna — A City Beyond Its Borders |
 | 14 | A map so detailed it becomes the territory | [`14_map_that_ate_vienna_local_pbf.py`](2026/14_map_that_ate_vienna_local_pbf.py) | The Map That Ate Vienna |
 | 15 | Inside Out, Upside Down | [`15_inverted_alps.py`](2026/15_inverted_alps.py) | The Inverted Alps |
+| 17 | Light & Dark | [`17_vienna_in_the_shadows.py`](2026/17_vienna_in_the_shadows.py) | Vienna in the Shadows |
 
 #### Day 1: Points, *A City Park, One Tree at a Time*
 
@@ -102,12 +103,18 @@ The Grossglockner massif twice, side by side: once as it is, and once turned ins
 
 The map comes from `2026/15_inverted_alps.py`. By default it downloads public elevation tiles from AWS and caches them locally. See [Setup](#setup).
 
+#### Day 17: Light & Dark, *Vienna in the Shadows*
+
+How long does the ground in central Vienna stay in the shade on the shortest day of the year? For 21 December 2026, the sun's position is calculated every 15 minutes between 08:00 and 16:00 with pvlib. At each step, every building casts its shadow onto the ground, and a 5 m raster counts how many hours each cell spends in building shadow, from light grey (little shadow) to black (shadow all day). Roofs are not modelled and are left blank. The 2,784 building footprints come from OpenStreetMap. Their heights are taken from the `height` tag where available (964 buildings), estimated from `building:levels` at 3.2 m per level (1,374) or set to a fallback of 12 m (446). The model is deliberately simple: flat ground, buildings as vertical extrusions with flat roofs, and no trees or terrain. With the low winter sun, 98 % of the open ground in the map extent is in shadow at least once during the day.
+
+The map comes from `2026/17_vienna_in_the_shadows.py`, which reads a local OpenStreetMap PBF file with PyOsmium. See [Setup](#setup).
+
 ## Hashtags
 
 All hashtags used across the maps, without the per-day `#DayN` tags:
 
 ```
-#30DayMapChallenge #Points #Lines #Polygons #MyData #Senses #Sight #Vintage #10Minutes #Vienna #Austria #Stadtpark #Stephansdom #GIS #GeoData #Geospatial #OpenData #Cartography #HistoricalCartography #MinimalistCartography #SpatialAnalysis #Viewshed #DBSCAN #Python #GeoPandas #UrbanGreen #UrbanHistory #CyclingInfrastructure #HealthcareGeography #ElectricityGrid #Utopia #SpatialOptimization #UrbanPlanning #RegionalDevelopment #UrbanRural #SettlementPatterns #UrbanMorphology #PromptingOnly #UrbanGrowth #Sound #NoisePollution #Power #SolarEnergy #Photovoltaics #Interactions #Commuting #OpenStreetMap #MapGeneralization #InsideOut #Alps #Grossglockner #Terrain #Hillshade
+#30DayMapChallenge #Points #Lines #Polygons #MyData #Senses #Sight #Vintage #10Minutes #Vienna #Austria #Stadtpark #Stephansdom #GIS #GeoData #Geospatial #OpenData #Cartography #HistoricalCartography #MinimalistCartography #SpatialAnalysis #Viewshed #DBSCAN #Python #GeoPandas #UrbanGreen #UrbanHistory #CyclingInfrastructure #HealthcareGeography #ElectricityGrid #Utopia #SpatialOptimization #UrbanPlanning #RegionalDevelopment #UrbanRural #SettlementPatterns #UrbanMorphology #PromptingOnly #UrbanGrowth #Sound #NoisePollution #Power #SolarEnergy #Photovoltaics #Interactions #Commuting #OpenStreetMap #MapGeneralization #InsideOut #Alps #Grossglockner #Terrain #Hillshade #LightAndDark #Shadows #SolarPosition
 ```
 
 ## Project Structure
@@ -137,6 +144,7 @@ All hashtags used across the maps, without the per-day `#DayN` tags:
 │   ├── 13_interactions.ipynb  # description only
 │   ├── 14_map_that_ate_vienna_local_pbf.py  # four-panel OSM map for Day 14
 │   ├── 15_inverted_alps.py  # real and inverted terrain for Day 15
+│   ├── 17_vienna_in_the_shadows.py  # building-shadow simulation for Day 17
 │   ├── data/             # input data and analysis results
 │   └── maps/             # rendered PNGs (git-ignored)
 ├── pyproject.toml
@@ -194,6 +202,15 @@ uv run python 15_inverted_alps.py
 
 The script saves the map as `maps/map15.png` and caches the downloaded tiles in `terrain_tile_cache/`, both relative to the current directory. `--dem path/to/dem.tif` uses a local elevation model in any coordinate system instead of the tiles, and `--zoom` (default 11), `--cell` (default 30 m) and `--dpi` (default 240) control the resolution.
 
+Day 17 reads building footprints from a local PBF file, like Day 14. The included `data/vienna_center.osm.pbf` covers the default map extent. Run the script from `2026/`:
+
+```bash
+cd 2026
+uv run python 17_vienna_in_the_shadows.py --pbf data/vienna_center.osm.pbf --out maps/map17.png
+```
+
+Next to the PNG, the script writes a GeoTIFF of shadow hours (`maps/map17.tif`, EPSG:31287) and a CSV summary (`maps/map17.csv`) with the building count, height sources and the shadowed share. Without `--out`, the files are named `day17_vienna_shadows.*` in the current directory. `--date`, `--start` and `--end` (local Vienna time) set the simulated day and time window, and `--step-minutes` (default 15) and `--resolution` (default 5 m) control the sampling. `--fallback-height` (default 12 m) and `--level-height` (default 3.2 m) set the height estimates. Instead of `--pbf`, `--buildings` reads a GeoPackage or FlatGeobuf with a height column (`--height-column`, default `height_m`).
+
 ### Dependencies
 
 - [geopandas](https://geopandas.org/): reading and processing geodata
@@ -204,6 +221,8 @@ The script saves the map as `maps/map15.png` and caches the downloaded tiles in 
 - [scipy](https://scipy.org/): spatial index and minimum spanning tree for Day 8, growth simulation for Day 10
 - [osmium](https://osmcode.org/pyosmium/): reading OpenStreetMap PBF files for Day 14
 - [mercantile](https://github.com/mapbox/mercantile): finding the elevation tiles for Day 15
+- [pvlib](https://pvlib-python.readthedocs.io/): sun position for Day 17
+- [pyproj](https://pyproj4.github.io/pyproj/): coordinate transformations for Day 17
 - [requests](https://requests.readthedocs.io/) and [geojson](https://github.com/jazzband/geojson): loading data from the WFS and WMS services
 - [tqdm](https://tqdm.github.io/): progress bar for the viewshed analysis
 - [ipykernel](https://ipython.readthedocs.io/): Jupyter kernel
@@ -216,7 +235,7 @@ The script saves the map as `maps/map15.png` and caches the downloaded tiles in 
 - **BEV and Austrian grid operators (APG and regional network companies)**: power line data for Day 7
 - **Land Kärnten, Digital Terrain Model (DGM) of Austria**: 10 m × 10 m terrain heights from airborne laser scanning, GeoTIFF in EPSG:31287, used for slope and elevation in Day 8
 - **BEV, Digital Landscape Model (DLM)**: building footprints for Day 9
-- **OpenStreetMap contributors**: map data for Day 14, licensed under the [ODbL](https://opendatacommons.org/licenses/odbl/)
+- **OpenStreetMap contributors**: map data for Days 14 and 17, licensed under the [ODbL](https://opendatacommons.org/licenses/odbl/)
 - **AWS Terrain Tiles** ([Registry of Open Data on AWS](https://registry.opendata.aws/terrain-tiles/)): elevation data for Day 15
 - **Austrian strategic noise mapping 2022**: railway noise zones (Lden) for Day 11, via the WMS at `inspire.lfrz.gv.at`
 - **Statistik Austria**: 1 km regional statistical grid (Regionalstatistisches Raster) and the national border for Day 8, and the 250 m grid for Day 9

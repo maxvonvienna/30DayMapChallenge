@@ -20,4 +20,6 @@ dependencies = [
     "osmium>=4.3.2",
     "numpy>=2.5.4",
     "mercantile>=1.2.1",
+    "pyproj>=3.8.0",
+    "pvlib>=0.16.1",
 ]
