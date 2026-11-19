@@ -26,6 +26,8 @@ All finished maps are on my website: [aim.wien/blog/30-day-map-challenge-2026](h
 | 14 | A map so detailed it becomes the territory | [`14_map_that_ate_vienna_local_pbf.py`](2026/14_map_that_ate_vienna_local_pbf.py) | The Map That Ate Vienna |
 | 15 | Inside Out, Upside Down | [`15_inverted_alps.py`](2026/15_inverted_alps.py) | The Inverted Alps |
 | 17 | Light & Dark | [`17_vienna_in_the_shadows.py`](2026/17_vienna_in_the_shadows.py) | Vienna in the Shadows |
+| 18 | NULL | [`18_NULL.ipynb`](2026/18_NULL.ipynb) | Nothing to Map |
+| 19 | Senses: Smell | [`19_smell.ipynb`](2026/19_smell.ipynb) | The Smell of the Wind — Mapping an Invisible Landscape |
 
 #### Day 1: Points, *A City Park, One Tree at a Time*
 
@@ -109,12 +111,26 @@ How long does the ground in central Vienna stay in the shade on the shortest day
 
 The map comes from `2026/17_vienna_in_the_shadows.py`, which reads a local OpenStreetMap PBF file with PyOsmium. See [Setup](#setup).
 
+#### Day 18: NULL, *Nothing to Map*
+
+What happens when a map contains absolutely nothing? This map takes cartographic minimalism to its logical extreme: no roads, no buildings, no boundaries, no data. Instead of showing missing values or gaps in geographic information, it removes the geography altogether. The only element left is a north arrow, a hint that even when there is nothing to see, orientation still exists. Is a map without geographic information still a map?
+
+This map was made in QGIS, not Python. The project is `2026/18_NULL.qgz`, and the notebook holds only the description.
+
+#### Day 19: Senses: Smell, *The Smell of the Wind — Mapping an Invisible Landscape*
+
+How do you map something you cannot see, but might be able to smell? This map shows how a hypothetical odour plume from Vienna's main wastewater treatment plant in Simmering could spread with the wind. For every hour of historical modelled 10 m wind from Open-Meteo, a simplified Gaussian plume is calculated on a 50 m grid and normalized to its own maximum. The colours show the share of hours in which each cell exceeds a relative plume index threshold, over Vienna's district boundaries. Hours with wind below 0.5 m/s count as calm and are left out.
+
+This is an illustrative model, not a measurement of odour. It assumes constant emissions and flat terrain, and ignores atmospheric stability and real odour concentrations.
+
+The map comes from `2026/19_smell_of_the_wind_period_vivid.py`. The notebook holds only the description and the command used. See [Setup](#setup).
+
 ## Hashtags
 
 All hashtags used across the maps, without the per-day `#DayN` tags:
 
 ```
-#30DayMapChallenge #Points #Lines #Polygons #MyData #Senses #Sight #Vintage #10Minutes #Vienna #Austria #Stadtpark #Stephansdom #GIS #GeoData #Geospatial #OpenData #Cartography #HistoricalCartography #MinimalistCartography #SpatialAnalysis #Viewshed #DBSCAN #Python #GeoPandas #UrbanGreen #UrbanHistory #CyclingInfrastructure #HealthcareGeography #ElectricityGrid #Utopia #SpatialOptimization #UrbanPlanning #RegionalDevelopment #UrbanRural #SettlementPatterns #UrbanMorphology #PromptingOnly #UrbanGrowth #Sound #NoisePollution #Power #SolarEnergy #Photovoltaics #Interactions #Commuting #OpenStreetMap #MapGeneralization #InsideOut #Alps #Grossglockner #Terrain #Hillshade #LightAndDark #Shadows #SolarPosition
+#30DayMapChallenge #Points #Lines #Polygons #MyData #Senses #Sight #Vintage #10Minutes #Vienna #Austria #Stadtpark #Stephansdom #GIS #GeoData #Geospatial #OpenData #Cartography #HistoricalCartography #MinimalistCartography #SpatialAnalysis #Viewshed #DBSCAN #Python #GeoPandas #UrbanGreen #UrbanHistory #CyclingInfrastructure #HealthcareGeography #ElectricityGrid #Utopia #SpatialOptimization #UrbanPlanning #RegionalDevelopment #UrbanRural #SettlementPatterns #UrbanMorphology #PromptingOnly #UrbanGrowth #Sound #NoisePollution #Power #SolarEnergy #Photovoltaics #Interactions #Commuting #OpenStreetMap #MapGeneralization #InsideOut #Alps #Grossglockner #Terrain #Hillshade #LightAndDark #Shadows #SolarPosition #NULL #Minimalism #NothingToMap #SensesSmell #AtmosphericDispersion #DataVisualization
 ```
 
 ## Project Structure
@@ -145,6 +161,10 @@ All hashtags used across the maps, without the per-day `#DayN` tags:
 │   ├── 14_map_that_ate_vienna_local_pbf.py  # four-panel OSM map for Day 14
 │   ├── 15_inverted_alps.py  # real and inverted terrain for Day 15
 │   ├── 17_vienna_in_the_shadows.py  # building-shadow simulation for Day 17
+│   ├── 18_NULL.ipynb     # description only
+│   ├── 18_NULL.qgz       # QGIS project for Day 18
+│   ├── 19_smell.ipynb    # description only
+│   ├── 19_smell_of_the_wind_period_vivid.py  # wind-plume frequency map for Day 19
 │   ├── data/             # input data and analysis results
 │   └── maps/             # rendered PNGs (git-ignored)
 ├── pyproject.toml
@@ -211,6 +231,16 @@ uv run python 17_vienna_in_the_shadows.py --pbf data/vienna_center.osm.pbf --out
 
 Next to the PNG, the script writes a GeoTIFF of shadow hours (`maps/map17.tif`, EPSG:31287) and a CSV summary (`maps/map17.csv`) with the building count, height sources and the shadowed share. Without `--out`, the files are named `day17_vienna_shadows.*` in the current directory. `--date`, `--start` and `--end` (local Vienna time) set the simulated day and time window, and `--step-minutes` (default 15) and `--resolution` (default 5 m) control the sampling. `--fallback-height` (default 12 m) and `--level-height` (default 3.2 m) set the height estimates. Instead of `--pbf`, `--buildings` reads a GeoPackage or FlatGeobuf with a height column (`--height-column`, default `height_m`).
 
+Day 18 is a QGIS project with no data layers. Open `2026/18_NULL.qgz` in [QGIS](https://qgis.org/).
+
+Day 19 downloads hourly wind data from the Open-Meteo archive API on its first run and caches it in `2026/data/day19_cache/`. Unlike the other scripts, it uses paths relative to the repository root, so run it from there:
+
+```bash
+uv run python 2026/19_smell_of_the_wind_period_vivid.py --lon 16.46564 --lat 48.17128     --start-date 2026-10-26 --end-date 2026-10-26 --extent-km 10 --resolution-m 50     --threshold 0.05 --gamma 0.5 --out 2026/maps/map19.png
+```
+
+`--lon` and `--lat` set the source location, and `--start-date` and `--end-date` the period of wind data. `--threshold` (default 0.10) is the relative plume index a cell must reach to count for an hour, and `--gamma` (default 0.4) controls the colour scale. Next to the PNG, the script writes the frequency and mean plume index grids (`maps/map19.npz`) and a JSON summary (`maps/map19.json`). The district boundaries come from `2026/data/vienna_districts_lines.geojson`.
+
 ### Dependencies
 
 - [geopandas](https://geopandas.org/): reading and processing geodata
@@ -222,8 +252,8 @@ Next to the PNG, the script writes a GeoTIFF of shadow hours (`maps/map17.tif`, 
 - [osmium](https://osmcode.org/pyosmium/): reading OpenStreetMap PBF files for Day 14
 - [mercantile](https://github.com/mapbox/mercantile): finding the elevation tiles for Day 15
 - [pvlib](https://pvlib-python.readthedocs.io/): sun position for Day 17
-- [pyproj](https://pyproj4.github.io/pyproj/): coordinate transformations for Day 17
-- [requests](https://requests.readthedocs.io/) and [geojson](https://github.com/jazzband/geojson): loading data from the WFS and WMS services
+- [pyproj](https://pyproj4.github.io/pyproj/): coordinate transformations for Days 17 and 19
+- [requests](https://requests.readthedocs.io/) and [geojson](https://github.com/jazzband/geojson): loading data from the WFS and WMS services and the Open-Meteo API
 - [tqdm](https://tqdm.github.io/): progress bar for the viewshed analysis
 - [ipykernel](https://ipython.readthedocs.io/): Jupyter kernel
 
@@ -239,3 +269,4 @@ Next to the PNG, the script writes a GeoTIFF of shadow hours (`maps/map17.tif`, 
 - **AWS Terrain Tiles** ([Registry of Open Data on AWS](https://registry.opendata.aws/terrain-tiles/)): elevation data for Day 15
 - **Austrian strategic noise mapping 2022**: railway noise zones (Lden) for Day 11, via the WMS at `inspire.lfrz.gv.at`
 - **Statistik Austria**: 1 km regional statistical grid (Regionalstatistisches Raster) and the national border for Day 8, and the 250 m grid for Day 9
+- **Open-Meteo**: historical hourly 10 m wind speed and direction for Day 19, from the [Historical Weather API](https://open-meteo.com/en/docs/historical-weather-api), licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
