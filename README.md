@@ -28,6 +28,8 @@ All finished maps are on my website: [aim.wien/blog/30-day-map-challenge-2026](h
 | 17 | Light & Dark | [`17_vienna_in_the_shadows.py`](2026/17_vienna_in_the_shadows.py) | Vienna in the Shadows |
 | 18 | NULL | [`18_NULL.ipynb`](2026/18_NULL.ipynb) | Nothing to Map |
 | 19 | Senses: Smell | [`19_smell.ipynb`](2026/19_smell.ipynb) | The Smell of the Wind — Mapping an Invisible Landscape |
+| 20 | Hexagons | [`20_hexagon.ipynb`](2026/20_hexagon.ipynb) | The Urban Fabric of Vienna — Population Meets Buildings |
+| 21 | OpenStreetMap | [`21_osm.ipynb`](2026/21_osm.ipynb) | Mapping Everyday Commerce — The Retail Landscape of Vienna |
 
 #### Day 1: Points, *A City Park, One Tree at a Time*
 
@@ -125,12 +127,24 @@ This is an illustrative model, not a measurement of odour. It assumes constant e
 
 The map comes from `2026/19_smell_of_the_wind_period_vivid.py`. The notebook holds only the description and the command used. See [Setup](#setup).
 
+#### Day 20: Hexagons, *The Urban Fabric of Vienna — Population Meets Buildings*
+
+What makes a place urban: the number of people, the density of buildings, or the relationship between the two? The Vienna metropolitan region is divided into 1,000 m hexagons, and each hexagon combines population density and building density in a bivariate colour scheme. The dense urban core stands out where both are high. Beyond the city, the pattern breaks up into smaller settlement concentrations, suburban development and sparsely populated rural areas, and the colour combinations show where buildings and population do not follow the same pattern. Unlike administrative units, the regular hexagons give a consistent framework across municipal boundaries.
+
+The notebook holds only the description.
+
+#### Day 21: OpenStreetMap, *Mapping Everyday Commerce — The Retail Landscape of Vienna*
+
+What does the distribution of shops say about the structure of a city? Each point is a shop mapped in OpenStreetMap across Vienna and its surrounding municipalities, coloured by retail category according to its `shop=*` tag. Shops concentrate in Vienna's densely built-up core, with further clusters along the main settlement corridors and in surrounding towns. Supermarkets, convenience stores and other everyday retail form a widespread network, and the density decreases towards the periphery. The pattern also reflects what contributors have mapped, so differences in data completeness can influence it.
+
+The notebook holds only the description.
+
 ## Hashtags
 
 All hashtags used across the maps, without the per-day `#DayN` tags:
 
 ```
-#30DayMapChallenge #Points #Lines #Polygons #MyData #Senses #Sight #Vintage #10Minutes #Vienna #Austria #Stadtpark #Stephansdom #GIS #GeoData #Geospatial #OpenData #Cartography #HistoricalCartography #MinimalistCartography #SpatialAnalysis #Viewshed #DBSCAN #Python #GeoPandas #UrbanGreen #UrbanHistory #CyclingInfrastructure #HealthcareGeography #ElectricityGrid #Utopia #SpatialOptimization #UrbanPlanning #RegionalDevelopment #UrbanRural #SettlementPatterns #UrbanMorphology #PromptingOnly #UrbanGrowth #Sound #NoisePollution #Power #SolarEnergy #Photovoltaics #Interactions #Commuting #OpenStreetMap #MapGeneralization #InsideOut #Alps #Grossglockner #Terrain #Hillshade #LightAndDark #Shadows #SolarPosition #NULL #Minimalism #NothingToMap #SensesSmell #AtmosphericDispersion #DataVisualization
+#30DayMapChallenge #Points #Lines #Polygons #MyData #Senses #Sight #Vintage #10Minutes #Vienna #Austria #Stadtpark #Stephansdom #GIS #GeoData #Geospatial #OpenData #Cartography #HistoricalCartography #MinimalistCartography #SpatialAnalysis #Viewshed #DBSCAN #Python #GeoPandas #UrbanGreen #UrbanHistory #CyclingInfrastructure #HealthcareGeography #ElectricityGrid #Utopia #SpatialOptimization #UrbanPlanning #RegionalDevelopment #UrbanRural #SettlementPatterns #UrbanMorphology #PromptingOnly #UrbanGrowth #Sound #NoisePollution #Power #SolarEnergy #Photovoltaics #Interactions #Commuting #OpenStreetMap #MapGeneralization #InsideOut #Alps #Grossglockner #Terrain #Hillshade #LightAndDark #Shadows #SolarPosition #NULL #Minimalism #NothingToMap #SensesSmell #AtmosphericDispersion #Hexagons #BivariateMap #UrbanGeography #PopulationDensity #OSM #RetailGeography #DataVisualization
 ```
 
 ## Project Structure
@@ -165,6 +179,8 @@ All hashtags used across the maps, without the per-day `#DayN` tags:
 │   ├── 18_NULL.qgz       # QGIS project for Day 18
 │   ├── 19_smell.ipynb    # description only
 │   ├── 19_smell_of_the_wind_period_vivid.py  # wind-plume frequency map for Day 19
+│   ├── 20_hexagon.ipynb  # description only
+│   ├── 21_osm.ipynb      # description only
 │   ├── data/             # input data and analysis results
 │   └── maps/             # rendered PNGs (git-ignored)
 ├── pyproject.toml
@@ -265,7 +281,7 @@ uv run python 2026/19_smell_of_the_wind_period_vivid.py --lon 16.46564 --lat 48.
 - **BEV and Austrian grid operators (APG and regional network companies)**: power line data for Day 7
 - **Land Kärnten, Digital Terrain Model (DGM) of Austria**: 10 m × 10 m terrain heights from airborne laser scanning, GeoTIFF in EPSG:31287, used for slope and elevation in Day 8
 - **BEV, Digital Landscape Model (DLM)**: building footprints for Day 9
-- **OpenStreetMap contributors**: map data for Days 14 and 17, licensed under the [ODbL](https://opendatacommons.org/licenses/odbl/)
+- **OpenStreetMap contributors**: map data for Days 14, 17 and 21, licensed under the [ODbL](https://opendatacommons.org/licenses/odbl/)
 - **AWS Terrain Tiles** ([Registry of Open Data on AWS](https://registry.opendata.aws/terrain-tiles/)): elevation data for Day 15
 - **Austrian strategic noise mapping 2022**: railway noise zones (Lden) for Day 11, via the WMS at `inspire.lfrz.gv.at`
 - **Statistik Austria**: 1 km regional statistical grid (Regionalstatistisches Raster) and the national border for Day 8, and the 250 m grid for Day 9
