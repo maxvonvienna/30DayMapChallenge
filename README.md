@@ -30,6 +30,7 @@ All finished maps are on my website: [aim.wien/blog/30-day-map-challenge-2026](h
 | 19 | Senses: Smell | [`19_smell.ipynb`](2026/19_smell.ipynb) | The Smell of the Wind — Mapping an Invisible Landscape |
 | 20 | Hexagons | [`20_hexagon.ipynb`](2026/20_hexagon.ipynb) | The Urban Fabric of Vienna — Population Meets Buildings |
 | 21 | OpenStreetMap | [`21_osm.ipynb`](2026/21_osm.ipynb) | Mapping Everyday Commerce — The Retail Landscape of Vienna |
+| 22 | Projections | [`22.ipynb`](2026/22.ipynb) | A Different Perspective on the World — Two-Point Equidistant Projection |
 
 #### Day 1: Points, *A City Park, One Tree at a Time*
 
@@ -139,12 +140,18 @@ What does the distribution of shops say about the structure of a city? Each poin
 
 The notebook holds only the description.
 
+#### Day 22: Projections, *A Different Perspective on the World — Two-Point Equidistant Projection*
+
+Every world map is a compromise between shape, area, distance and direction. This map uses the Two-Point Equidistant projection (ESRI:53031), which keeps the true distance from two chosen reference points to every other place on the globe. The result is an almost circular arrangement of stretched, curved and rearranged continents, a world that is recognizable and unfamiliar at the same time. The distortions are not a flaw but the price of that one preserved property: no projection is neutral, and changing it is sometimes all it takes to see the world differently.
+
+This map was made in QGIS, not Python. The project is `2026/22_projections.qgz`, and the notebook holds only the description.
+
 ## Hashtags
 
 All hashtags used across the maps, without the per-day `#DayN` tags:
 
 ```
-#30DayMapChallenge #Points #Lines #Polygons #MyData #Senses #Sight #Vintage #10Minutes #Vienna #Austria #Stadtpark #Stephansdom #GIS #GeoData #Geospatial #OpenData #Cartography #HistoricalCartography #MinimalistCartography #SpatialAnalysis #Viewshed #DBSCAN #Python #GeoPandas #UrbanGreen #UrbanHistory #CyclingInfrastructure #HealthcareGeography #ElectricityGrid #Utopia #SpatialOptimization #UrbanPlanning #RegionalDevelopment #UrbanRural #SettlementPatterns #UrbanMorphology #PromptingOnly #UrbanGrowth #Sound #NoisePollution #Power #SolarEnergy #Photovoltaics #Interactions #Commuting #OpenStreetMap #MapGeneralization #InsideOut #Alps #Grossglockner #Terrain #Hillshade #LightAndDark #Shadows #SolarPosition #NULL #Minimalism #NothingToMap #SensesSmell #AtmosphericDispersion #Hexagons #BivariateMap #UrbanGeography #PopulationDensity #OSM #RetailGeography #DataVisualization
+#30DayMapChallenge #Points #Lines #Polygons #MyData #Senses #Sight #Vintage #10Minutes #Vienna #Austria #Stadtpark #Stephansdom #GIS #GeoData #Geospatial #OpenData #Cartography #HistoricalCartography #MinimalistCartography #SpatialAnalysis #Viewshed #DBSCAN #Python #GeoPandas #UrbanGreen #UrbanHistory #CyclingInfrastructure #HealthcareGeography #ElectricityGrid #Utopia #SpatialOptimization #UrbanPlanning #RegionalDevelopment #UrbanRural #SettlementPatterns #UrbanMorphology #PromptingOnly #UrbanGrowth #Sound #NoisePollution #Power #SolarEnergy #Photovoltaics #Interactions #Commuting #OpenStreetMap #MapGeneralization #InsideOut #Alps #Grossglockner #Terrain #Hillshade #LightAndDark #Shadows #SolarPosition #NULL #Minimalism #NothingToMap #SensesSmell #AtmosphericDispersion #Hexagons #BivariateMap #UrbanGeography #PopulationDensity #OSM #RetailGeography #Projections #TwoPointEquidistant #MapProjections #WorldMap #DataVisualization
 ```
 
 ## Project Structure
@@ -181,6 +188,8 @@ All hashtags used across the maps, without the per-day `#DayN` tags:
 │   ├── 19_smell_of_the_wind_period_vivid.py  # wind-plume frequency map for Day 19
 │   ├── 20_hexagon.ipynb  # description only
 │   ├── 21_osm.ipynb      # description only
+│   ├── 22.ipynb          # description only
+│   ├── 22_projections.qgz  # QGIS project for Day 22
 │   ├── data/             # input data and analysis results
 │   └── maps/             # rendered PNGs (git-ignored)
 ├── pyproject.toml
@@ -257,6 +266,8 @@ uv run python 2026/19_smell_of_the_wind_period_vivid.py --lon 16.46564 --lat 48.
 
 `--lon` and `--lat` set the source location, and `--start-date` and `--end-date` the period of wind data. `--threshold` (default 0.10) is the relative plume index a cell must reach to count for an hour, and `--gamma` (default 0.4) controls the colour scale. Next to the PNG, the script writes the frequency and mean plume index grids (`maps/map19.npz`) and a JSON summary (`maps/map19.json`). The district boundaries come from `2026/data/vienna_districts_lines.geojson`.
 
+Day 22 is a QGIS project. Open `2026/22_projections.qgz` in [QGIS](https://qgis.org/). It uses the world map (`world_map.gpkg`, layer `countries`) that ships with QGIS, linked by a relative path to the QGIS install under `C:\Program Files`. On another setup, repoint the layer to `resources/data/world_map.gpkg` in your QGIS installation.
+
 ### Dependencies
 
 - [geopandas](https://geopandas.org/): reading and processing geodata
@@ -285,4 +296,5 @@ uv run python 2026/19_smell_of_the_wind_period_vivid.py --lon 16.46564 --lat 48.
 - **AWS Terrain Tiles** ([Registry of Open Data on AWS](https://registry.opendata.aws/terrain-tiles/)): elevation data for Day 15
 - **Austrian strategic noise mapping 2022**: railway noise zones (Lden) for Day 11, via the WMS at `inspire.lfrz.gv.at`
 - **Statistik Austria**: 1 km regional statistical grid (Regionalstatistisches Raster) and the national border for Day 8, and the 250 m grid for Day 9
+- **QGIS sample data**: the `world_map.gpkg` country layer bundled with QGIS, for Day 22
 - **Open-Meteo**: historical hourly 10 m wind speed and direction for Day 19, from the [Historical Weather API](https://open-meteo.com/en/docs/historical-weather-api), licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
