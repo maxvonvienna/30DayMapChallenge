@@ -31,6 +31,7 @@ All finished maps are on my website: [aim.wien/blog/30-day-map-challenge-2026](h
 | 20 | Hexagons | [`20_hexagon.ipynb`](2026/20_hexagon.ipynb) | The Urban Fabric of Vienna — Population Meets Buildings |
 | 21 | OpenStreetMap | [`21_osm.ipynb`](2026/21_osm.ipynb) | Mapping Everyday Commerce — The Retail Landscape of Vienna |
 | 22 | Projections | [`22.ipynb`](2026/22.ipynb) | A Different Perspective on the World — Two-Point Equidistant Projection |
+| 23 | Senses: Taste | [`23_taste.ipynb`](2026/23_taste.ipynb) | The Taste of Vienna — Culinary Diversity in Hexagons |
 
 #### Day 1: Points, *A City Park, One Tree at a Time*
 
@@ -146,12 +147,18 @@ Every world map is a compromise between shape, area, distance and direction. Thi
 
 This map was made in QGIS, not Python. The project is `2026/22_projections.qgz`, and the notebook holds only the description.
 
+#### Day 23: Senses: Taste, *The Taste of Vienna — Culinary Diversity in Hexagons*
+
+How diverse is Vienna's food scene, and where? All restaurants mapped in OpenStreetMap (`amenity=restaurant`, about 3,000) are downloaded with osmnx, and their `cuisine` tags are split into individual cuisines. Vienna is covered with hexagons of 250 m edge length (about 0.16 km² each). For each hexagon, the Shannon entropy H = −Σ pᵢ ln pᵢ of the cuisine shares measures culinary diversity: it is 0 where all restaurants serve the same cuisine, and it rises with the number of cuisines and how evenly they are represented. District boundaries give orientation. Restaurants without a `cuisine` tag are left out, and the result reflects what OpenStreetMap contributors have tagged.
+
+The notebook downloads the data and writes `maps/map23.png`. See [Setup](#setup).
+
 ## Hashtags
 
 All hashtags used across the maps, without the per-day `#DayN` tags:
 
 ```
-#30DayMapChallenge #Points #Lines #Polygons #MyData #Senses #Sight #Vintage #10Minutes #Vienna #Austria #Stadtpark #Stephansdom #GIS #GeoData #Geospatial #OpenData #Cartography #HistoricalCartography #MinimalistCartography #SpatialAnalysis #Viewshed #DBSCAN #Python #GeoPandas #UrbanGreen #UrbanHistory #CyclingInfrastructure #HealthcareGeography #ElectricityGrid #Utopia #SpatialOptimization #UrbanPlanning #RegionalDevelopment #UrbanRural #SettlementPatterns #UrbanMorphology #PromptingOnly #UrbanGrowth #Sound #NoisePollution #Power #SolarEnergy #Photovoltaics #Interactions #Commuting #OpenStreetMap #MapGeneralization #InsideOut #Alps #Grossglockner #Terrain #Hillshade #LightAndDark #Shadows #SolarPosition #NULL #Minimalism #NothingToMap #SensesSmell #AtmosphericDispersion #Hexagons #BivariateMap #UrbanGeography #PopulationDensity #OSM #RetailGeography #Projections #TwoPointEquidistant #MapProjections #WorldMap #DataVisualization
+#30DayMapChallenge #Points #Lines #Polygons #MyData #Senses #Sight #Vintage #10Minutes #Vienna #Austria #Stadtpark #Stephansdom #GIS #GeoData #Geospatial #OpenData #Cartography #HistoricalCartography #MinimalistCartography #SpatialAnalysis #Viewshed #DBSCAN #Python #GeoPandas #UrbanGreen #UrbanHistory #CyclingInfrastructure #HealthcareGeography #ElectricityGrid #Utopia #SpatialOptimization #UrbanPlanning #RegionalDevelopment #UrbanRural #SettlementPatterns #UrbanMorphology #PromptingOnly #UrbanGrowth #Sound #NoisePollution #Power #SolarEnergy #Photovoltaics #Interactions #Commuting #OpenStreetMap #MapGeneralization #InsideOut #Alps #Grossglockner #Terrain #Hillshade #LightAndDark #Shadows #SolarPosition #NULL #Minimalism #NothingToMap #SensesSmell #AtmosphericDispersion #Hexagons #BivariateMap #UrbanGeography #PopulationDensity #OSM #RetailGeography #Projections #TwoPointEquidistant #MapProjections #WorldMap #Taste #Food #Restaurants #ShannonEntropy #Diversity #OSMnx #DataVisualization
 ```
 
 ## Project Structure
@@ -190,6 +197,7 @@ All hashtags used across the maps, without the per-day `#DayN` tags:
 │   ├── 21_osm.ipynb      # description only
 │   ├── 22.ipynb          # description only
 │   ├── 22_projections.qgz  # QGIS project for Day 22
+│   ├── 23_taste.ipynb
 │   ├── data/             # input data and analysis results
 │   └── maps/             # rendered PNGs (git-ignored)
 ├── pyproject.toml
@@ -268,6 +276,8 @@ uv run python 2026/19_smell_of_the_wind_period_vivid.py --lon 16.46564 --lat 48.
 
 Day 22 is a QGIS project. Open `2026/22_projections.qgz` in [QGIS](https://qgis.org/). It uses the world map (`world_map.gpkg`, layer `countries`) that ships with QGIS, linked by a relative path to the QGIS install under `C:\Program Files`. On another setup, repoint the layer to `resources/data/world_map.gpkg` in your QGIS installation.
 
+Day 23 downloads the restaurants from the Overpass API with osmnx on its first run and caches the response in `2026/cache/`. Run the notebook from `2026/`. It also reads the district boundaries from `data/vienna_districts_lines.geojson`. If the public Overpass server is busy (HTTP 502), wait a few minutes and run the download cell again.
+
 ### Dependencies
 
 - [geopandas](https://geopandas.org/): reading and processing geodata
@@ -277,6 +287,7 @@ Day 22 is a QGIS project. Open `2026/22_projections.qgz` in [QGIS](https://qgis.
 - [scikit-learn](https://scikit-learn.org/): DBSCAN clustering
 - [scipy](https://scipy.org/): spatial index and minimum spanning tree for Day 8, growth simulation for Day 10
 - [osmium](https://osmcode.org/pyosmium/): reading OpenStreetMap PBF files for Day 14
+- [osmnx](https://osmnx.readthedocs.io/): downloading the OpenStreetMap restaurants for Day 23
 - [mercantile](https://github.com/mapbox/mercantile): finding the elevation tiles for Day 15
 - [pvlib](https://pvlib-python.readthedocs.io/): sun position for Day 17
 - [pyproj](https://pyproj4.github.io/pyproj/): coordinate transformations for Days 17 and 19
@@ -292,7 +303,7 @@ Day 22 is a QGIS project. Open `2026/22_projections.qgz` in [QGIS](https://qgis.
 - **BEV and Austrian grid operators (APG and regional network companies)**: power line data for Day 7
 - **Land Kärnten, Digital Terrain Model (DGM) of Austria**: 10 m × 10 m terrain heights from airborne laser scanning, GeoTIFF in EPSG:31287, used for slope and elevation in Day 8
 - **BEV, Digital Landscape Model (DLM)**: building footprints for Day 9
-- **OpenStreetMap contributors**: map data for Days 14, 17 and 21, licensed under the [ODbL](https://opendatacommons.org/licenses/odbl/)
+- **OpenStreetMap contributors**: map data for Days 14, 17, 21 and 23, licensed under the [ODbL](https://opendatacommons.org/licenses/odbl/)
 - **AWS Terrain Tiles** ([Registry of Open Data on AWS](https://registry.opendata.aws/terrain-tiles/)): elevation data for Day 15
 - **Austrian strategic noise mapping 2022**: railway noise zones (Lden) for Day 11, via the WMS at `inspire.lfrz.gv.at`
 - **Statistik Austria**: 1 km regional statistical grid (Regionalstatistisches Raster) and the national border for Day 8, and the 250 m grid for Day 9
