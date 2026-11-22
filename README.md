@@ -31,7 +31,9 @@ All finished maps are on my website: [aim.wien/blog/30-day-map-challenge-2026](h
 | 20 | Hexagons | [`20_hexagon.ipynb`](2026/20_hexagon.ipynb) | The Urban Fabric of Vienna — Population Meets Buildings |
 | 21 | OpenStreetMap | [`21_osm.ipynb`](2026/21_osm.ipynb) | Mapping Everyday Commerce — The Retail Landscape of Vienna |
 | 22 | Projections | [`22.ipynb`](2026/22.ipynb) | A Different Perspective on the World — Two-Point Equidistant Projection |
-| 23 | Senses: Taste | [`23_taste.ipynb`](2026/23_taste.ipynb) | The Taste of Vienna — Culinary Diversity in Hexagons |
+| 23 | Senses: Taste | [`23_taste.ipynb`](2026/23_taste.ipynb) | The Taste of Diversity — Mapping Vienna's Culinary Landscape |
+| 24 | Network | [`24_hidden_backbone_vienna.py`](2026/24_hidden_backbone_vienna.py) | The Hidden Backbone of Vienna — Mapping Network Centrality |
+| 25 | Is This a Map? | [`25_sound_of_vienna.py`](2026/25_sound_of_vienna.py) | The Sound of Vienna — When Geography Becomes Music |
 
 #### Day 1: Points, *A City Park, One Tree at a Time*
 
@@ -147,18 +149,30 @@ Every world map is a compromise between shape, area, distance and direction. Thi
 
 This map was made in QGIS, not Python. The project is `2026/22_projections.qgz`, and the notebook holds only the description.
 
-#### Day 23: Senses: Taste, *The Taste of Vienna — Culinary Diversity in Hexagons*
+#### Day 23: Senses: Taste, *The Taste of Diversity — Mapping Vienna's Culinary Landscape*
 
-How diverse is Vienna's food scene, and where? All restaurants mapped in OpenStreetMap (`amenity=restaurant`, about 3,000) are downloaded with osmnx, and their `cuisine` tags are split into individual cuisines. Vienna is covered with hexagons of 250 m edge length (about 0.16 km² each). For each hexagon, the Shannon entropy H = −Σ pᵢ ln pᵢ of the cuisine shares measures culinary diversity: it is 0 where all restaurants serve the same cuisine, and it rises with the number of cuisines and how evenly they are represented. District boundaries give orientation. Restaurants without a `cuisine` tag are left out, and the result reflects what OpenStreetMap contributors have tagged.
+Can we measure the variety of tastes a city has to offer, and how does it change across urban space? All restaurants mapped in OpenStreetMap (`amenity=restaurant`, about 3,000) are downloaded with osmnx and assigned to the cuisines in their `cuisine` tag. Vienna is covered with hexagons of 250 m edge length (about 0.16 km² each), and for each hexagon the Shannon Diversity Index H = −Σ pᵢ ln pᵢ of the cuisine shares measures culinary diversity. It is 0 where only one cuisine is present and rises with the number of cuisines and how evenly they are represented. The inner districts stand out as hotspots, with the highest values around the city centre, while the outer districts break up into smaller pockets of diversity. Restaurant density and culinary diversity are not the same thing: many restaurants serving similar food can be less diverse than fewer restaurants with a wider range. Restaurants without a `cuisine` tag are left out, and the map reflects what OpenStreetMap contributors have tagged, not the full range of flavours in Vienna.
 
 The notebook downloads the data and writes `maps/map23.png`. See [Setup](#setup).
+
+#### Day 24: Network, *The Hidden Backbone of Vienna — Mapping Network Centrality*
+
+Not all streets are equally important. This map finds the streets that hold Vienna's road network together, without using road classes or traffic counts. The OpenStreetMap drivable network is downloaded with osmnx and turned into an undirected graph weighted by road length. Shortest paths for 35,000 sampled origin–destination pairs (350 origins × 100 destinations) give each segment an edge betweenness centrality: the share of paths that use it. Segments above the 75th percentile are drawn in orange, red and dark purple, and the rest of the network fades into the background. Major corridors, bridges and links between parts of the city emerge as a backbone. This is not a map of traffic volumes: it ignores one-way streets and travel behaviour and approximates the structural importance of each segment.
+
+The map comes from `2026/24_hidden_backbone_vienna.py`. The notebook holds only the description and the command used. See [Setup](#setup).
+
+#### Day 25: Is This a Map?, *The Sound of Vienna — When Geography Becomes Music*
+
+Can a city be turned into music, and is the result still a map? Vienna's OpenStreetMap road network becomes an experimental graphic score. Each note is a street segment (1,800 sampled segments of at least 15 m): its east–west position sets when it is played, its north–south position sets the pitch on a pentatonic scale, and its length sets the duration. The piece runs from west to east over 60 seconds. The score is drawn across five staves, with notes coloured by road type, and the same notes are exported as MIDI with one instrument per road class. The notation is intentionally experimental, not conventional staff notation.
+
+The score comes from `2026/25_sound_of_vienna.py`. An audio version is in `2026/maps/map25.mp3`. The notebook holds only the description. See [Setup](#setup).
 
 ## Hashtags
 
 All hashtags used across the maps, without the per-day `#DayN` tags:
 
 ```
-#30DayMapChallenge #Points #Lines #Polygons #MyData #Senses #Sight #Vintage #10Minutes #Vienna #Austria #Stadtpark #Stephansdom #GIS #GeoData #Geospatial #OpenData #Cartography #HistoricalCartography #MinimalistCartography #SpatialAnalysis #Viewshed #DBSCAN #Python #GeoPandas #UrbanGreen #UrbanHistory #CyclingInfrastructure #HealthcareGeography #ElectricityGrid #Utopia #SpatialOptimization #UrbanPlanning #RegionalDevelopment #UrbanRural #SettlementPatterns #UrbanMorphology #PromptingOnly #UrbanGrowth #Sound #NoisePollution #Power #SolarEnergy #Photovoltaics #Interactions #Commuting #OpenStreetMap #MapGeneralization #InsideOut #Alps #Grossglockner #Terrain #Hillshade #LightAndDark #Shadows #SolarPosition #NULL #Minimalism #NothingToMap #SensesSmell #AtmosphericDispersion #Hexagons #BivariateMap #UrbanGeography #PopulationDensity #OSM #RetailGeography #Projections #TwoPointEquidistant #MapProjections #WorldMap #Taste #Food #Restaurants #ShannonEntropy #Diversity #OSMnx #DataVisualization
+#30DayMapChallenge #Points #Lines #Polygons #MyData #Senses #Sight #Vintage #10Minutes #Vienna #Austria #Stadtpark #Stephansdom #GIS #GeoData #Geospatial #OpenData #Cartography #HistoricalCartography #MinimalistCartography #SpatialAnalysis #Viewshed #DBSCAN #Python #GeoPandas #UrbanGreen #UrbanHistory #CyclingInfrastructure #HealthcareGeography #ElectricityGrid #Utopia #SpatialOptimization #UrbanPlanning #RegionalDevelopment #UrbanRural #SettlementPatterns #UrbanMorphology #PromptingOnly #UrbanGrowth #Sound #NoisePollution #Power #SolarEnergy #Photovoltaics #Interactions #Commuting #OpenStreetMap #MapGeneralization #InsideOut #Alps #Grossglockner #Terrain #Hillshade #LightAndDark #Shadows #SolarPosition #NULL #Minimalism #NothingToMap #SensesSmell #AtmosphericDispersion #Hexagons #BivariateMap #UrbanGeography #PopulationDensity #OSM #RetailGeography #Projections #TwoPointEquidistant #MapProjections #WorldMap #Taste #Food #Restaurants #ShannonEntropy #Diversity #OSMnx #CulinaryDiversity #ShannonIndex #Network #GraphTheory #BetweennessCentrality #IsThisAMap #Sonification #GenerativeArt #DataVisualization
 ```
 
 ## Project Structure
@@ -198,8 +212,12 @@ All hashtags used across the maps, without the per-day `#DayN` tags:
 │   ├── 22.ipynb          # description only
 │   ├── 22_projections.qgz  # QGIS project for Day 22
 │   ├── 23_taste.ipynb
+│   ├── 24_network.ipynb  # description only
+│   ├── 24_hidden_backbone_vienna.py  # edge betweenness centrality map for Day 24
+│   ├── 25.ipynb          # description only
+│   ├── 25_sound_of_vienna.py  # street network as graphic score and MIDI for Day 25
 │   ├── data/             # input data and analysis results
-│   └── maps/             # rendered PNGs (git-ignored)
+│   └── maps/             # rendered maps (git-ignored, a few added by hand)
 ├── pyproject.toml
 └── uv.lock
 ```
@@ -278,6 +296,22 @@ Day 22 is a QGIS project. Open `2026/22_projections.qgz` in [QGIS](https://qgis.
 
 Day 23 downloads the restaurants from the Overpass API with osmnx on its first run and caches the response in `2026/cache/`. Run the notebook from `2026/`. It also reads the district boundaries from `data/vienna_districts_lines.geojson`. If the public Overpass server is busy (HTTP 502), wait a few minutes and run the download cell again.
 
+Day 24 downloads Vienna's drivable road network with osmnx on its first run and caches it as GraphML. Run it from the repository root, with the options used for the map:
+
+```bash
+uv run python 2026/24_hidden_backbone_vienna.py --place "Wien, Österreich" --network-type drive \n    --sources 350 --targets 100 --min-percentile 75 --seed 43 --dpi 300 \n    --out 2026/maps/map24.png --cache 2026/cache/day24_vienna_osm.graphml
+```
+
+`--sources` and `--targets` set how many origins and destinations per origin are sampled, and `--min-percentile` which segments are coloured. Next to the PNG, the script writes the segments with their centrality (`maps/map24.gpkg`, layer `road_centrality`, EPSG:31287) and a JSON summary (`maps/map24.json`). `--no-cache` downloads the network again.
+
+Day 25 also downloads the road network with osmnx and caches it as GraphML. For example, from the repository root:
+
+```bash
+uv run python 2026/25_sound_of_vienna.py --out 2026/maps/map25.png --cache 2026/cache/day25_vienna_osm.graphml
+```
+
+Next to the PNG, the script writes the notes as MIDI (`maps/map25.mid`) and as CSV (`maps/map25.csv`). `--max-notes` (default 1800), `--duration` (default 60 s) and `--seed` (default 42) control the composition. The MP3 in `maps/` is a rendering of the MIDI file; the script does not create it.
+
 ### Dependencies
 
 - [geopandas](https://geopandas.org/): reading and processing geodata
@@ -287,7 +321,9 @@ Day 23 downloads the restaurants from the Overpass API with osmnx on its first r
 - [scikit-learn](https://scikit-learn.org/): DBSCAN clustering
 - [scipy](https://scipy.org/): spatial index and minimum spanning tree for Day 8, growth simulation for Day 10
 - [osmium](https://osmcode.org/pyosmium/): reading OpenStreetMap PBF files for Day 14
-- [osmnx](https://osmnx.readthedocs.io/): downloading the OpenStreetMap restaurants for Day 23
+- [osmnx](https://osmnx.readthedocs.io/): downloading OpenStreetMap restaurants and road networks for Days 23–25
+- [networkx](https://networkx.org/): shortest paths and edge centrality for Day 24
+- [pretty_midi](https://github.com/craffel/pretty-midi): writing the MIDI file for Day 25
 - [mercantile](https://github.com/mapbox/mercantile): finding the elevation tiles for Day 15
 - [pvlib](https://pvlib-python.readthedocs.io/): sun position for Day 17
 - [pyproj](https://pyproj4.github.io/pyproj/): coordinate transformations for Days 17 and 19
@@ -303,7 +339,7 @@ Day 23 downloads the restaurants from the Overpass API with osmnx on its first r
 - **BEV and Austrian grid operators (APG and regional network companies)**: power line data for Day 7
 - **Land Kärnten, Digital Terrain Model (DGM) of Austria**: 10 m × 10 m terrain heights from airborne laser scanning, GeoTIFF in EPSG:31287, used for slope and elevation in Day 8
 - **BEV, Digital Landscape Model (DLM)**: building footprints for Day 9
-- **OpenStreetMap contributors**: map data for Days 14, 17, 21 and 23, licensed under the [ODbL](https://opendatacommons.org/licenses/odbl/)
+- **OpenStreetMap contributors**: map data for Days 14, 17, 21 and 23–25, licensed under the [ODbL](https://opendatacommons.org/licenses/odbl/)
 - **AWS Terrain Tiles** ([Registry of Open Data on AWS](https://registry.opendata.aws/terrain-tiles/)): elevation data for Day 15
 - **Austrian strategic noise mapping 2022**: railway noise zones (Lden) for Day 11, via the WMS at `inspire.lfrz.gv.at`
 - **Statistik Austria**: 1 km regional statistical grid (Regionalstatistisches Raster) and the national border for Day 8, and the 250 m grid for Day 9

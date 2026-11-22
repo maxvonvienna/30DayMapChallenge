@@ -23,4 +23,5 @@ dependencies = [
     "pyproj>=3.8.0",
     "pvlib>=0.16.1",
     "networkx>=3.7",
+    "pretty-midi>=0.2.11.post0",
 ]
